@@ -3,6 +3,7 @@
 .vscode
 *.py
 *.pdf
+!figs/*.pdf
 ## Core latex/pdflatex auxiliary files:
 *.aux
 *.lof
