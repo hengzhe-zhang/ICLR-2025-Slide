@@ -11,24 +11,67 @@
 \definecolor{highlight}{RGB}{27, 133, 69} % Darker green highlight for important points
 \definecolor{darkgray}{RGB}{52, 73, 94} % Dark gray for main text
 \definecolor{lightgray}{RGB}{236, 240, 241} % Light gray for backgrounds
-\definecolor{warmorange}{RGB}{230, 126, 34} % Warm orange for attention points
+\definecolor{warmorange}{RGB}{140, 70, 20} % Warm orange for attention points
 \definecolor{softred}{RGB}{231, 76, 60} % Softer red that's easier on the eyes
-\definecolor{teal}{RGB}{22, 160, 133} % Teal for alternative highlighting
+\definecolor{teal}{RGB}{15, 120, 100} % Teal for alternative highlighting
 \definecolor{goldenrod}{RGB}{243, 156, 18} % Golden color for contrastive learning
 
+\definecolor{modernhighlight}{RGB}{20, 110, 70}
+\newcommand{\hlmodern}[1]{\textcolor{modernhighlight}{#1}}
+
+
+% Midnight blue – deep and elegant
+\definecolor{midnight}{RGB}{25, 32, 72}
+
+% Deep plum – moody and refined
+\definecolor{deepplum}{RGB}{72, 0, 72}
+
+% Forest black – nearly black with a hint of green
+\definecolor{forestblack}{RGB}{10, 30, 25}
+
+% Graphite – smooth dark gray for text or UI blocks
+\definecolor{graphite}{RGB}{33, 37, 41}
+
+% Steel blue – dark and techy
+\definecolor{steelblue}{RGB}{54, 69, 79}
+
+% Charred red – deep, rich red without being too bright
+\definecolor{charredred}{RGB}{111, 28, 28}
+
+% Ash purple – muted and mysterious
+\definecolor{ashpurple}{RGB}{70, 60, 85}
+
+% Ink teal – elegant, dark cyan tone
+\definecolor{inkteal}{RGB}{20, 50, 60}
 
 % Add commands for colored text
 \newcommand{\hlblue}[1]{\textcolor{mainblue}{#1}}
-\newcommand{\hlpurple}[1]{\textcolor{accent}{#1}}
+\newcommand{\hlpurple}[1]{\textcolor{deepplum}{#1}}
 \newcommand{\hlgreen}[1]{\textcolor{highlight}{#1}}
 \newcommand{\hlorange}[1]{\textcolor{warmorange}{#1}}
 \newcommand{\hlteal}[1]{\textcolor{teal}{#1}}
 \newcommand{\hlgold}[1]{\textcolor{goldenrod}{#1}}
 
+
+\newcommand{\hlmidnight}[1]{\textcolor{midnight}{#1}}
+\newcommand{\hlplum}[1]{\textcolor{deepplum}{#1}}
+\newcommand{\hlforest}[1]{\textcolor{forestblack}{#1}}
+\newcommand{\hlgraphite}[1]{\textcolor{graphite}{#1}}
+\newcommand{\hlsteel}[1]{\textcolor{steelblue}{#1}}
+\newcommand{\hlcharred}[1]{\textcolor{charredred}{#1}}
+\newcommand{\hlash}[1]{\textcolor{ashpurple}{#1}}
+\newcommand{\hlinkteal}[1]{\textcolor{inkteal}{#1}}
+
+
 \setbeamercolor{block title}{fg=ngreen,bg=white} % Colors of the block titles
 \setbeamercolor{block body}{fg=black,bg=white} % Colors of the body of blocks
-\setbeamercolor{block alerted title}{fg=white,bg=dblue!70} % Colors of the highlighted block titles
-\setbeamercolor{block alerted body}{fg=black,bg=dblue!10} % Colors of the body of highlighted blocks
+%\setbeamercolor{block alerted title}{fg=white,bg=dblue!70} % Colors of the highlighted block titles
+%\setbeamercolor{block alerted body}{fg=black,bg=dblue!10} % Colors of the body of highlighted blocks
+
+\definecolor{modernblue}{RGB}{45, 90, 160}
+\definecolor{lightblue}{RGB}{230, 240, 255}
+\setbeamercolor{block alerted title}{fg=white,bg=modernblue}
+\setbeamercolor{block alerted body}{fg=black,bg=lightblue}
 
 
 %-----------------------------------------------------------
@@ -140,7 +183,7 @@
                     \begin{figure}
                         \centering
                         \includegraphics[width=0.75\linewidth, trim=10 15 10 15, clip]{figs/Flow.pdf}
-                        \caption{Neural architecture for generating symbolic expressions.}
+                        \caption{The workflow of RAG-SR.}
                     \end{figure}
 
                     \textbf{\hlblue{Evolutionary algorithm with online learning:}}
@@ -206,9 +249,9 @@
                 \vspace{-0.3cm}
                 \begin{alertblock}{Key Takeaway}
                     \begin{center}
-                        \textbf{\hlgreen{Language Model} $\rightarrow$ \hlgreen{Effective knowledge processing}}\\
-                        \textbf{\hlgreen{Evolutionary Algorithm} $\rightarrow$ \hlgreen{Efficient knowledge discovery}}\\
-                        \textbf{\hlgreen{RAG bridges LM and EA} $\rightarrow$ \hlgreen{Powerful SR}}
+                        \textbf{\hlmodern{Language Model} $\rightarrow$ \hlmodern{Effective knowledge processing}}\\
+                        \textbf{\hlmodern{Evolutionary Algorithm} $\rightarrow$ \hlmodern{Efficient knowledge discovery}}\\
+                        \textbf{\hlmodern{RAG bridges LM and EA} $\rightarrow$ \hlmodern{Powerful SR}}
                     \end{center}
                 \end{alertblock}
             \end{column} % End of the second column
@@ -228,11 +271,11 @@
                         \small
                         \begin{tabular}{cc}
                             \toprule
-                            \textbf{\hlpurple{RAG-NN Generated}} & \textbf{\hlteal{Simple NN Generated}} \\
+                            \textbf{\hlpurple{RAG-NN Generated}} & \textbf{\hlsteel{Simple NN Generated}} \\
                             \midrule
-                            Sin(Sin(ARG3)) (0)                   & Cos(Cos(Cos(ARG9))) (4)               \\
-                            AQ(ARG7, ARG8) (0)                   & Log(Max(ARG7, ARG7)) (3)              \\
-                            Max(ARG1, ARG8) (0)                  & Subtract(ARG1, ARG1) (2)              \\
+                            Sin(Sin(ARG3)) (0)                   & Cos(Cos(Cos(ARG9))) (4)                \\
+                            AQ(ARG7, ARG8) (0)                   & Log(Max(ARG7, ARG7)) (3)               \\
+                            Max(ARG1, ARG8) (0)                  & Subtract(ARG1, ARG1) (2)               \\
                             \bottomrule
                         \end{tabular}
                         \caption{Examples of generated trees with edit distance.}
@@ -259,7 +302,7 @@
                         \textbf{\hlblue{Key Findings:}}
                         \begin{itemize}
                             \item \hlpurple{Neural generation outperforms simple retrieval}
-                            \item \hlgreen{All components together achieve lowest edit distance, RAG has most significant impact}
+                            \item \hlcharred{All components together achieve lowest edit distance, RAG has most significant impact}
                             \item \hlorange{RAG-SR outperforms all 25 algorithms in $R^2$ scores}
                         \end{itemize}
                     \end{minipage}
