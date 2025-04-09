@@ -87,7 +87,8 @@
 
 
 \newcommand{\email}[1]{\href{mailto:#1}{#1}}
-
+\setbeamerfont{block title}{family=\sffamily}
+\setbeamerfont{block body}{family=\sffamily}
 
 %-----------------------------------------------------------
 
@@ -98,7 +99,6 @@
 \usepackage{booktabs} % Top and bottom rules for tables
 \usepackage{tikz}
 \usetikzlibrary{shapes,arrows,positioning}
-
 
 %----------------------------------------------------------------------------------------
 %	TITLE SECTION
@@ -147,7 +147,7 @@
                     \textbf{\hlblue{Symbolic Regression (SR):}}
                     \begin{itemize}
                         \item Discovers mathematical expressions from data
-                        \item Determines both structure $f$ and parameters $\theta$
+                        \item Determines both the structure $f$ and parameters $\theta$
                         \item Applications: physics, biology, finance
                     \end{itemize}
 
@@ -156,7 +156,7 @@
                         \mathcal{L}(\Phi; X, Y) = \frac{1}{N} \sum_{i=1}^{N} \ell\left(\mathcal{M}\left(\phi_1(X_i), \ldots, \phi_m(X_i)\right), Y_i\right)
                     \end{equation}
 
-                    $\phi_1 \dots \phi_m$ are constructed features. $\mathcal{M}$ usually is a linear model.
+                    $\phi_1 \dots \phi_m$ are constructed features. $\mathcal{M}$ is typically a linear model.
                 \end{block}
 
 
@@ -186,17 +186,23 @@
                         \caption{The workflow of RAG-SR.}
                     \end{figure}
 
-                    \textbf{\hlblue{Evolutionary algorithm with online learning:}}
+                    \textbf{\hlblue{Evolutionary Algorithm with Online Learning:}}
                     \begin{enumerate}
-                        \item \textbf{Solution Initialization:} Random initialization
+                        \item \textbf{Solution Initialization:} Randomly initialize candidate solutions
                         \item \textbf{Solution Evaluation:} Ridge regression with leave-out cross-validation
-                        \item \textbf{Library Construction:}
+                        \item \textbf{Library Construction:} Data collection and model training
                         \begin{itemize}
+                            \normalsize
                             \item \hlteal{Retrieval Library:} KD-Tree for nearest neighbor search
-                            \item \hlpurple{Neural Library (Online learning):} Trained on Retrieval Library
+                            \item \hlpurple{Neural Library (Online Learning):} Trained on the Retrieval Library
                         \end{itemize}
                         \item \textbf{Solution Selection:} Lexicase selection
-                        \item \textbf{Solution Generation:} Semantic Descent/Evolutionary operators
+                        \item \textbf{Solution Generation:} Inference based on the trained model
+                        \begin{itemize}
+                            \normalsize
+                            \item Semantic Descent: Exact retrieval or neural generation
+                            \item Evolutionary Operators: Random subtree crossover / mutation
+                        \end{itemize}
                         \item \textbf{Archive Maintenance:} Store best solutions
                     \end{enumerate}
                 \end{block}
@@ -216,18 +222,20 @@
 
 
                 \begin{block}{Semantic Descent}
-                    \textbf{\hlblue{For each tree $\phi_i$ in solution:}}
+                    \textbf{\hlblue{For each tree $\phi_i \in \phi_1 \dots \phi_m$ in the solution:}}
                     \begin{enumerate}
-                        \item Remove contribution: $\Phi^{temp}(X) = \Phi(X) - \beta_i \phi_i(X)$
-                        \item Compute residual: $R = Y - \Phi^{temp}(X)$
-                        \item Generate new tree $\phi$ to fit $R$ using:
+                        \item Remove its contribution from the output: $\Phi^{\text{temp}}(X) = \Phi(X) - \beta_i \phi_i(X)$, where $\Phi(X)$ is the current model output and $\beta_i$ is the coefficient.
+                        \item Compute residual: $R = Y - \Phi^{\text{temp}}(X)$, where $Y$ is the target output.
+                        \item Generate a new tree $\phi$ to fit $R$ using:
                         \begin{itemize}
-                            \item \hlteal{Retrieval} with probability $1-P_{neural}$
-                            \item \hlpurple{Neural generation} with probability $P_{neural}$
+                            \normalsize
+                            \item \hlteal{Retrieval}, with probability $1 - P_{\text{neural}}$; accept if it reduces error.
+                            \item \hlpurple{Neural Generation}, with probability $P_{\text{neural}}$; accept the tree directly.
                         \end{itemize}
-                        \item Accept new tree if it reduces error
                     \end{enumerate}
                 \end{block}
+                \hfill
+                \vspace{-2.5cm}
 
 %----------------------------------------------------------------------------------------
 %	RETRIEVAL-AUGMENTED GENERATION
@@ -240,20 +248,29 @@
                         \caption{Neural architecture for generating symbolic expressions.}
                     \end{figure}
 
+
                     \begin{itemize}
-                        \item Masked Contrastive Learning for Semantically Equivalent Expressions
-                        \item Scale-invariant Data Augmentation: Leverages sign-invariance
-                        \item Double Query Strategy: Queries with both $R$ and $-R$
+                        \item Masked contrastive learning for semantically equivalent expressions
+                        \item Scale-invariant data augmentation leveraging sign-invariance
+                        \item Double query strategy: queries with both $R$ and $-R$
                     \end{itemize}
+
+                    \begin{table}
+                        \centering
+                        \caption{Examples of generated trees with edit distances.}
+                        \small
+                        \begin{tabular}{ccc}
+                            \toprule
+                            \textbf{\hlpurple{RAG-NN Generated}} & \textbf{\hlsteel{Simple NN Generated}} & \textbf{Ground Truth Tree} \\
+                            \midrule
+                            Sin(Sin(ARG3)) (0)                   & Cos(Cos(Cos(ARG9))) (4)                & Sin(Sin(ARG3))             \\
+                            AQ(ARG7, ARG8) (0)                   & Log(Max(ARG7, ARG7)) (3)               & AQ(ARG7, ARG8)             \\
+                            Max(ARG1, ARG8) (0)                  & Subtract(ARG1, ARG1) (2)               & Max(ARG1, ARG8)            \\
+                            \bottomrule
+                        \end{tabular}
+                    \end{table}
                 \end{block}
-                \vspace{-0.3cm}
-                \begin{alertblock}{Key Takeaway}
-                    \begin{center}
-                        \textbf{\hlmodern{Language Model} $\rightarrow$ \hlmodern{Effective knowledge processing}}\\
-                        \textbf{\hlmodern{Evolutionary Algorithm} $\rightarrow$ \hlmodern{Efficient knowledge discovery}}\\
-                        \textbf{\hlmodern{RAG bridges LM and EA} $\rightarrow$ \hlmodern{Powerful SR}}
-                    \end{center}
-                \end{alertblock}
+
             \end{column} % End of the second column
 
             \begin{column}{\sepwid}\end{column} % Empty spacer column
@@ -266,20 +283,7 @@
 
 
                 \begin{block}{Key Results}
-                    \begin{table}
-                        \centering
-                        \small
-                        \begin{tabular}{cc}
-                            \toprule
-                            \textbf{\hlpurple{RAG-NN Generated}} & \textbf{\hlsteel{Simple NN Generated}} \\
-                            \midrule
-                            Sin(Sin(ARG3)) (0)                   & Cos(Cos(Cos(ARG9))) (4)                \\
-                            AQ(ARG7, ARG8) (0)                   & Log(Max(ARG7, ARG7)) (3)               \\
-                            Max(ARG1, ARG8) (0)                  & Subtract(ARG1, ARG1) (2)               \\
-                            \bottomrule
-                        \end{tabular}
-                        \caption{Examples of generated trees with edit distance.}
-                    \end{table}
+
                     \vspace{-5mm}
 
                     \begin{figure}
@@ -298,16 +302,23 @@
                     \end{minipage}
                     \hfill
                     \begin{minipage}[t]{0.48\linewidth}
-                        \vspace*{.5cm} % Adjusted to align with figure
+                        \vspace*{.5cm}
                         \textbf{\hlblue{Key Findings:}}
                         \begin{itemize}
                             \item \hlpurple{Neural generation outperforms simple retrieval}
-                            \item \hlcharred{All components together achieve lowest edit distance, RAG has most significant impact}
+                            \item \hlcharred{All components combined achieve the lowest edit distance; RAG has the most significant impact}
                             \item \hlorange{RAG-SR outperforms all 25 algorithms in $R^2$ scores}
                         \end{itemize}
                     \end{minipage}
 
-                    \vspace{45mm}
+                    \begin{block}{Key Takeaway}
+                        \begin{center}
+                            \textbf{\hlmodern{Language Model} $\rightarrow$ \hlmodern{Effective knowledge processing}}\\[1ex]
+                            \textbf{\hlmodern{Evolutionary Algorithm} $\rightarrow$ \hlmodern{Efficient knowledge discovery}}\\[1ex]
+                            \textbf{\hlmodern{RAG bridges LM and EA} $\rightarrow$ \hlmodern{Powerful SR}}
+                        \end{center}
+                    \end{block}
+%                    \vspace{45mm}
 
                     \begin{center}
                         \begin{tabular}{ccc}
